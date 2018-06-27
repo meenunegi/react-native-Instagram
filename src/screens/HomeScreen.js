@@ -16,7 +16,7 @@ import {
 
 const { width, height } = Dimensions.get("window");
 
-const accessToken = "4096695451.55e4bb2.6564c0b368654835babf1ebbb8fcaed7";
+const accessToken = "ADD_TOKEN_HERE";
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
