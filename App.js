@@ -1,10 +1,10 @@
 import React from "react";
 import { Font } from "expo";
 import { Text } from "react-native";
+
 import EStyleSheet from "react-native-extended-stylesheet";
 
 import Routes from "./src/Routes";
-
 
 class App extends React.Component {
   constructor(props) {
@@ -33,5 +33,3 @@ EStyleSheet.build({
 });
 
 export default App;
-
-

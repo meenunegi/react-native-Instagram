@@ -16,9 +16,9 @@ import {
 
 const { width, height } = Dimensions.get("window");
 
-const accessToken = "ADD_TOKEN_HERE";
+const accessToken = "ADD_YOU_TOKEN";
 
-export default class HomeScreen extends React.Component {
+class HomeScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     title: "Instagram",
     headerTitleStyle: styles.headerText,
@@ -51,7 +51,7 @@ export default class HomeScreen extends React.Component {
   };
 
   componentDidMount() {
-    this.fetchFeed();
+   // this.fetchFeed();
   }
 
   createPost = (postInfo, index) => {
@@ -130,6 +130,7 @@ export default class HomeScreen extends React.Component {
 
     const posts = await response.json();
     console.log(posts.data, "data");
+
     const comments = await this.makeCommentsList(posts.data);
 
     this.setState({
@@ -191,6 +192,4 @@ const styles = StyleSheet.create({
   }
 });
 
-// const imageUri = postInfo.images.standard_resolution.url;
-// const username = postInfo.user.username;
-// const numLikes = postInfo.likes.count;
+export default HomeScreen;

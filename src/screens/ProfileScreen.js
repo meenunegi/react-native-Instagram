@@ -1,7 +1,16 @@
 import React from "react";
-import { StyleSheet, Text, View, Dimensions, FlatList } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Dimensions,
+  FlatList,
+  Image
+} from "react-native";
 
 const { width, height } = Dimensions.get("window");
+const accessToken = "ADD_YOUR_TOKEN";
+
 export default class ProfileScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     title: "Instagram",
@@ -15,8 +24,38 @@ export default class ProfileScreen extends React.Component {
     headerLeft: <View />
   });
 
+  state = {
+    loaded: false,
+    data: null
+  };
+
+  componentDidMount() {
+    this.fetchFeed();
+  }
+
+  async fetchFeed() {
+    const response = await fetch(
+      `https://api.instagram.com/v1/users/self/media/recent/?access_token=${accessToken}`
+    );
+
+    const posts = await response.json();
+    console.log(posts.data, "data");
+    console.log(posts.data[0], "img");
+    this.setState({
+      loaded: true,
+      data: posts.data
+    });
+  }
+
   renderHeader = () => (
+    // const profileImg = this.state.data.user.profile_picture;
+
     <View style={{ padding: 20, flexDirection: "row" }}>
+      {/* <Image
+          style={styles.profileImage}
+          source={{ uri: profileImg }}
+          resizeMode="cover"
+        /> */}
       <View style={styles.profileImage} />
       <View
         style={{
@@ -54,53 +93,29 @@ export default class ProfileScreen extends React.Component {
     </View>
   );
 
-  renderItem = ({ item, index }) => (
-    <View style={styles.list}>
-      <View
-        style={{
-          flex: 1,
-          margin: 1,
-          height: width * 0.4,
-          backgroundColor: "#CCC"
-        }}
-      />
-      <View
-        style={{
-          flex: 1,
-          margin: 1,
-          height: width * 0.4,
-          backgroundColor: "#CCC"
-        }}
-      />
-      <View
-        style={{
-          flex: 1,
-          margin: 1,
-          height: width * 0.4,
-          backgroundColor: "#CCC"
-        }}
-      />
-    </View>
-  );
+  renderItem = (postInfo, index) => {
+    const imageUri = postInfo.images.standard_resolution.url;
+
+    return (
+      <View style={styles.gridImgContainer}>
+        <Image
+          resizeMode="cover"
+          style={styles.image}
+          source={{ uri: imageUri }}
+        />
+      </View>
+    );
+  };
 
   render() {
     return (
       <View style={styles.container}>
         {this.renderHeader()}
         <FlatList
-          data={[
-            { key: "a" },
-            { key: "b" },
-            { key: "c" },
-            { key: "d" },
-            { key: "e" },
-            { key: "f" },
-            { key: "g" },
-            { key: "h" },
-            { key: "i" },
-            { key: "j" }
-          ]}
-          renderItem={this.renderItem}
+          numColumns={3}
+          data={this.state.data}
+          renderItem={({ item, index }) => this.renderItem(item, index)}
+          keyExtractor={item => item.id}
         />
       </View>
     );
@@ -112,10 +127,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff"
   },
-  list: {
-    justifyContent: "center",
-    flexDirection: "row",
-    flexWrap: "wrap"
+
+  gridImgContainer: {
+    padding: 1,
+    backgroundColor: "#CCC"
   },
   profileImage: {
     width: width * 0.2,
@@ -123,5 +138,9 @@ const styles = StyleSheet.create({
     borderRadius: width * 0.2,
     borderWidth: 1,
     marginRight: 10
+  },
+  image: {
+    height: width * 0.33,
+    width: width * 0.33
   }
 });

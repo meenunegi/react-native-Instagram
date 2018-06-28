@@ -27,10 +27,15 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^6.3.1",
+    "axios": "^0.18.0",
     "expo": "^27.1.0",
     "react": "16.3.1",
     "react-native": "~0.55.2",
     "react-native-extended-stylesheet": "^0.8.1",
-    "react-navigation": "^2.4.1"
+    "react-navigation": "^2.4.1",
+    "react-redux": "^5.0.7",
+    "redux": "^4.0.0",
+    "redux-persist": "^5.10.0",
+    "redux-thunk": "^2.3.0"
   }
 }
