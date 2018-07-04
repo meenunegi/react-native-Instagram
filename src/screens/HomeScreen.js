@@ -14,9 +14,11 @@ import {
   SimpleLineIcons
 } from "@expo/vector-icons";
 
+import { Loader } from "../components/Loader";
+
 const { width, height } = Dimensions.get("window");
 
-const accessToken = "ADD_YOU_TOKEN";
+const accessToken = "YOUR_ACCESS_TOKEN";
 
 class HomeScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -45,13 +47,13 @@ class HomeScreen extends React.Component {
   });
 
   state = {
-    loaded: false,
+    loaded: true,
     data: null,
     comments: []
   };
 
   componentDidMount() {
-   // this.fetchFeed();
+   this.fetchFeed();
   }
 
   createPost = (postInfo, index) => {
@@ -134,7 +136,7 @@ class HomeScreen extends React.Component {
     const comments = await this.makeCommentsList(posts.data);
 
     this.setState({
-      loaded: true,
+      loaded: false,
       data: posts.data,
       comments
     });
@@ -143,6 +145,7 @@ class HomeScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        <Loader loading={this.state.loaded} text="Loading..." />
         <FlatList
           data={this.state.data}
           renderItem={({ item, index }) => this.createPost(item, index)}

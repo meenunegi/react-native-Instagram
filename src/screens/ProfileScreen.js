@@ -7,9 +7,10 @@ import {
   FlatList,
   Image
 } from "react-native";
+import { Loader } from "../components/Loader";
 
 const { width, height } = Dimensions.get("window");
-const accessToken = "ADD_YOUR_TOKEN";
+const accessToken = "YOUR_ACCESS_TOKEN";
 
 export default class ProfileScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -25,8 +26,9 @@ export default class ProfileScreen extends React.Component {
   });
 
   state = {
-    loaded: false,
-    data: null
+    loaded: true,
+    data: null,
+    profileImg: null
   };
 
   componentDidMount() {
@@ -40,58 +42,58 @@ export default class ProfileScreen extends React.Component {
 
     const posts = await response.json();
     console.log(posts.data, "data");
-    console.log(posts.data[0], "img");
-    this.setState({
-      loaded: true,
-      data: posts.data
+    const img = posts.data[0].user.profile_picture;
+    await this.setState({
+      loaded: false,
+      data: posts.data,
+      profileImg: img
     });
+    this.renderHeader();
   }
 
-  renderHeader = () => (
-    // const profileImg = this.state.data.user.profile_picture;
+  renderHeader = () => {
+    const imageUrl = this.state.profileImg;
+    console.log(imageUrl, "img");
+    return (
+      <View style={{ padding: 20, flexDirection: "row" }}>
+        <View style={styles.profileImage} />
 
-    <View style={{ padding: 20, flexDirection: "row" }}>
-      {/* <Image
-          style={styles.profileImage}
-          source={{ uri: profileImg }}
-          resizeMode="cover"
-        /> */}
-      <View style={styles.profileImage} />
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          padding: 5
-        }}
-      >
-        <View style={{ flexDirection: "row", flex: 1 }}>
-          <View style={{ flex: 1, alignItems: "center" }}>
-            <Text>39</Text>
-            <Text>Posts</Text>
-          </View>
-          <View style={{ flex: 1, alignItems: "center" }}>
-            <Text>339</Text>
-            <Text>followers</Text>
-          </View>
-          <View style={{ flex: 1, alignItems: "center" }}>
-            <Text>393</Text>
-            <Text>following</Text>
-          </View>
-        </View>
         <View
           style={{
-            borderWidth: 1,
-            width: "100%",
-            marginLeft: 1,
-            alignItems: "center"
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 5
           }}
         >
-          <Text>Edit Profile</Text>
+          <View style={{ flexDirection: "row", flex: 1 }}>
+            <View style={{ flex: 1, alignItems: "center" }}>
+              <Text>39</Text>
+              <Text>Posts</Text>
+            </View>
+            <View style={{ flex: 1, alignItems: "center" }}>
+              <Text>339</Text>
+              <Text>followers</Text>
+            </View>
+            <View style={{ flex: 1, alignItems: "center" }}>
+              <Text>393</Text>
+              <Text>following</Text>
+            </View>
+          </View>
+          <View
+            style={{
+              borderWidth: 1,
+              width: "100%",
+              marginLeft: 1,
+              alignItems: "center"
+            }}
+          >
+            <Text>Edit Profile</Text>
+          </View>
         </View>
       </View>
-    </View>
-  );
+    );
+  };
 
   renderItem = (postInfo, index) => {
     const imageUri = postInfo.images.standard_resolution.url;
@@ -110,6 +112,7 @@ export default class ProfileScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        <Loader loading={this.state.loaded} text="Loading..." />
         {this.renderHeader()}
         <FlatList
           numColumns={3}
@@ -135,7 +138,7 @@ const styles = StyleSheet.create({
   profileImage: {
     width: width * 0.2,
     height: width * 0.2,
-    borderRadius: width * 0.2,
+    borderRadius: width * 0.5,
     borderWidth: 1,
     marginRight: 10
   },
